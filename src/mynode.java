@@ -1,10 +1,10 @@
-public class Mynode {
+public class mynode {
     int key;
 
-    Mynode(int key){
+    mynode(int key){
         this.key = key;
     }
-    Mynode(int key,int inf){
+    mynode(int key, int inf){
         this.key = key;
         this.inf = inf;
     }

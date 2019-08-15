@@ -12,15 +12,15 @@ public class MergeSortedArraysByHeapSort {
         int len = n/k+1;
         int pt = n-1;
         int[] arpt = new int[k];
-        Mynode[] cur = new Mynode[k];
+        mynode[] cur = new mynode[k];
         for (int i = 0; i < k; i++) {
             arpt[i] = ar[i].length-1;
-            cur[i] = new Mynode(ar[i][arpt[i]],i);
+            cur[i] = new mynode(ar[i][arpt[i]],i);
         }
         HeapOfClass maxheap = new HeapOfClass(cur,k);
         maxheap.buildMaxHeap();
         while(pt>=0){
-            Mynode root = maxheap.heap[0];
+            mynode root = maxheap.heap[0];
             ans[pt] = root.key;
             pt--;
             arpt[root.inf]--;

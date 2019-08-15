@@ -2,9 +2,9 @@ public class HeapOfClass {
     public static void main(String[] args) {
         int[] test = {2,17,14,6,13,10,1,5,1,12};
         int[] test2 ={15,13,9,5,12,8,7,4,0,6,2,1};
-        Mynode[] nodes = new Mynode[10];
+        mynode[] nodes = new mynode[10];
         for (int i = 0; i < 10; i++) {
-            Mynode temp = new Mynode(test[i],i);
+            mynode temp = new mynode(test[i],i);
             nodes[i] = temp;
         }
         HeapOfClass heap1 = new HeapOfClass(nodes,10);
@@ -47,24 +47,25 @@ public class HeapOfClass {
             System.out.println();
         }
     }
-    Mynode[] heap;
+    //**********************************************************
+    mynode[] heap;
     int heapsize;
-    HeapOfClass(Mynode[] heap,int heapsize){
+    HeapOfClass(mynode[] heap, int heapsize){
         this.heapsize = heapsize;
         this.heap = heap;
     }
     void exchange(int i, int j) {
-        Mynode temp = heap[i];
+        mynode temp = heap[i];
         heap[i] = heap[j];
         heap[j] = temp;
     }
-    void setHeapNode(int i,Mynode node){
-        Mynode[] temp;
+    void setHeapNode(int i, mynode node){
+        mynode[] temp;
         if(i>=heap.length){
-            temp = new Mynode[i*2];
+            temp = new mynode[i*2];
         }
         else if(heapsize<heap.length/4){
-            temp = new Mynode[heapsize*2];
+            temp = new mynode[heapsize*2];
         }
         else{
             heap[i] = node;
@@ -162,7 +163,7 @@ public class HeapOfClass {
             throw new IndexOutOfBoundsException("decreasing");
         }
         heap[i].key = key;
-        Mynode temp = heap[i];
+        mynode temp = heap[i];
         while(i>0){
             int p = parent(i);
             if (heap[p].key>=key){
@@ -176,7 +177,7 @@ public class HeapOfClass {
             heap[0] = temp;
         }
     }
-    void maxHeapInsert(Mynode node){
+    void maxHeapInsert(mynode node){
         heapsize++;
         setHeapNode(heapsize-1,node);
         heapIncreaseKey(heapsize-1,node.key);
