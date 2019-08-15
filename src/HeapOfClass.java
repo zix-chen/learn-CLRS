@@ -1,12 +1,13 @@
-
-
-public class Heap {
-
+public class HeapOfClass {
     public static void main(String[] args) {
         int[] test = {2,17,14,6,13,10,1,5,1,12};
         int[] test2 ={15,13,9,5,12,8,7,4,0,6,2,1};
-
-        Heap heap1 = new Heap(test2,12);
+        Mynode[] nodes = new Mynode[10];
+        for (int i = 0; i < 10; i++) {
+            Mynode temp = new Mynode(test[i],i);
+            nodes[i] = temp;
+        }
+        HeapOfClass heap1 = new HeapOfClass(nodes,10);
         {
             int max =heap1.heapsize;
             int print = 2;
@@ -17,16 +18,14 @@ public class Heap {
                     if(i>=heap1.heapsize){
                         break loop;
                     }
-                    System.out.print(heap1.heap[i]+" ");
+                    System.out.print(heap1.heap[i].key+" ");
                 }
                 System.out.println();
                 print*=2;
             }
             System.out.println();
         }
-        int[][] ints = new int[2][12];
-        System.out.println(ints[1][0]);
-        heap1.heapIncreaseKey(10,20);
+        heap1.buildMaxHeap();
         //heap.MaxHeapify();
         //heap1.maxHeapInsert(10);
         //heap1.heapDelete(0);
@@ -40,7 +39,7 @@ public class Heap {
                     if(i>=heap1.heapsize){
                         break loop;
                     }
-                    System.out.print(heap1.heap[i]+" ");
+                    System.out.print(heap1.heap[i].key+" ");
                 }
                 System.out.println();
                 print*=2;
@@ -48,24 +47,27 @@ public class Heap {
             System.out.println();
         }
     }
-
-    public Heap(int[] arr, int heapsize){
-        heap =arr;
-        this.heapsize = heapsize;
-    }
-    int[] heap;
+    Mynode[] heap;
     int heapsize;
-    //avoid the possibilty of out of bound and also save storge when needed
-    void setHeapNode(int i,int key){
-        int[] temp;
+    HeapOfClass(Mynode[] heap,int heapsize){
+        this.heapsize = heapsize;
+        this.heap = heap;
+    }
+    void exchange(int i, int j) {
+        Mynode temp = heap[i];
+        heap[i] = heap[j];
+        heap[j] = temp;
+    }
+    void setHeapNode(int i,Mynode node){
+        Mynode[] temp;
         if(i>=heap.length){
-             temp = new int[i*2];
+            temp = new Mynode[i*2];
         }
         else if(heapsize<heap.length/4){
-            temp = new int[heapsize*2];
+            temp = new Mynode[heapsize*2];
         }
         else{
-            heap[i] = key;
+            heap[i] = node;
             return;
         }
         for (int j = 0; j <heapsize&&j<heap.length; j++) {
@@ -74,7 +76,7 @@ public class Heap {
             temp[j] = heap[j];
         }
         heap = temp;
-        heap[i] = key;
+        heap[i] = node;
     }
     void buildMaxHeap(){
         for (int i = heapsize/2+1; i >=0; i--) {
@@ -103,11 +105,7 @@ public class Heap {
         }
         return temp;
     }
-    void exchange(int i, int j ){
-        int temp = heap[i];
-        heap[i] = heap[j];
-        heap[j] = temp;
-    }
+
     boolean hasLeft(int p){
         return p*2+1<heapsize;
     }
@@ -118,33 +116,33 @@ public class Heap {
         return c!=0;
     }
     public void MaxHeapify(int i){
-        int key = i;
+
         int l = 0,r = 0;
 
-        while(hasLeft(key)||hasRight(key)){
-            if(hasLeft(key) &&hasRight(key)){
-                l = left(key);
-                r = right(key);
+        while(hasLeft(i)||hasRight(i)){
+            if(hasLeft(i) &&hasRight(i)){
+                l = left(i);
+                r = right(i);
             }
-            else if(hasLeft(key)){
-                l = left(key);
-                r = key;
+            else if(hasLeft(i)){
+                l = left(i);
+                r = i;
             }
             else {
                 //it is only a trick for convenient!
-                l = key;
-                r = right(key);
+                l = i;
+                r = right(i);
             }
-            if(heap[key]>=heap[l]&&heap[key]>=heap[r]){
+            if(heap[i].key>=heap[l].key&&heap[i].key>=heap[r].key){
                 break;
             }
-            else if(heap[l]>=heap[r]){
-                exchange(key,l);
-                key  =l;
+            else if(heap[l].key>=heap[r].key){
+                exchange(i,l);
+                i  =l;
             }
             else{
-                exchange(key,r);
-                key = r;
+                exchange(i,r);
+                i = r;
             }
         }
     }
@@ -153,37 +151,39 @@ public class Heap {
         if(heapsize<1){
             throw new IndexOutOfBoundsException("heap underflow");
         }
-        int max = heap[0];
+        int max = heap[0].key;
         exchange(0,heapsize-1);
         heapsize--;
         MaxHeapify(0);
         return max;
     }
     void heapIncreaseKey(int i, int key){
-        if(key<heap[i]){
+        if(key<heap[i].key){
             throw new IndexOutOfBoundsException("decreasing");
         }
-        heap[i] = key;
+        heap[i].key = key;
+        Mynode temp = heap[i];
         while(i>0){
             int p = parent(i);
-            if (heap[p]>=key){
-                heap[i] = key;
+            if (heap[p].key>=key){
+                heap[i] = temp;
                 break;
             }
             heap[i] = heap[p];
             i = p;
         }
-        if (i==0){
-            heap[0] = key;
+        if(i==0){
+            heap[0] = temp;
         }
     }
-    void maxHeapInsert(int key){
+    void maxHeapInsert(Mynode node){
         heapsize++;
-        setHeapNode(heapsize-1,0xffffffff);
-        heapIncreaseKey(heapsize-1,key);
+        setHeapNode(heapsize-1,node);
+        heapIncreaseKey(heapsize-1,node.key);
     }
     void heapDelete(int i){
-        //mind the possibility that heap[i] is smaller than heap[heapsize-1] because its not a sorted array,it will not influence the ans, but will change the order。
+        //mind the possibility that heap[i] is smaller than heap[heapsize-1]
+        // because its not a sorted array,it will not influence the ans, but will change the order。
         if(i>=heapsize){
             throw new ArrayIndexOutOfBoundsException("node i didnt exist");
         }
