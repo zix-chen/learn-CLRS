@@ -4,11 +4,14 @@ public class Heap {
 
     public static void main(String[] args) {
         int[] test = {2,17,14,6,13,10,1,5,1,12};
-        Heap heap = new Heap(test,10);
-        heap.MaxHeapify(heap);
-        for(int i =0;i<heap.heapsize;i++){
-            System.out.println(heap.heap[i]);
+        int[] test2 ={15,13,9,5,12,8,7,4,0,6,2,1,0,0,0,0,};
+        Heap heap1 = new Heap(test2,12);
+        //heap.MaxHeapify();
+        heap1.maxHeapInsert(10);
+        for(int i =0;i<heap1.heapsize;i++){
+            System.out.print(heap1.heap[i]+" ");
         }
+        System.out.println();
     }
     public Heap(int[] arr, int size){
         heap =arr;
@@ -52,7 +55,7 @@ public class Heap {
     boolean hasParent(int c){
         return c!=0;
     }
-    public void MaxHeapify(Heap h){
+    public void MaxHeapify(){
         int key = 0;
         int l = 0,r = 0;
 
@@ -82,6 +85,35 @@ public class Heap {
                 key = r;
             }
         }
-
+    }
+    //Some funtions of max-priority queuea of CLRS chapter 5
+    int heapExtractMax(){
+        if(heapsize<1){
+            throw new IndexOutOfBoundsException("heap underflow");
+        }
+        int max = heap[0];
+        exchange(0,heapsize-1);
+        heapsize--;
+        MaxHeapify();
+        return max;
+    }
+    void heapIncreaseKey(int i, int key){
+        if(key<heap[i]){
+            throw new IndexOutOfBoundsException("decreasing");
+        }
+        heap[i] = key;
+        while(i>0){
+            int p = parent(i);
+            if (heap[p]>=heap[i]){
+                break;
+            }
+            exchange(i,p);
+            i = p;
+        }
+    }
+    void maxHeapInsert(int key){
+        heapsize++;
+        heap[heapsize-1] = -0xffffff;
+        heapIncreaseKey(heapsize-1,key);
     }
 }
