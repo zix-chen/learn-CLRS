@@ -8,8 +8,19 @@ public class Heap {
         Heap heap1 = new Heap(test2,12);
         //heap.MaxHeapify();
         heap1.maxHeapInsert(10);
-        for(int i =0;i<heap1.heapsize;i++){
-            System.out.print(heap1.heap[i]+" ");
+        int max =heap1.heapsize;
+        int print = 2;
+        int cal = 0;
+        int i =0;
+        loop:while(i<max){
+            for (; i < print-1; i++) {
+                if(i>=heap1.heapsize){
+                    break loop;
+                }
+                System.out.print(heap1.heap[i]+" ");
+            }
+            System.out.println();
+            print*=2;
         }
         System.out.println();
     }
@@ -104,10 +115,11 @@ public class Heap {
         heap[i] = key;
         while(i>0){
             int p = parent(i);
-            if (heap[p]>=heap[i]){
+            if (heap[p]>=key){
+                heap[i] = key;
                 break;
             }
-            exchange(i,p);
+            heap[i] = heap[p];
             i = p;
         }
     }
