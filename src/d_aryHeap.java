@@ -125,6 +125,7 @@ public class d_aryHeap {
             i = p;
         }
         heap[i] = temp;
+
         return true;
     }
 }
