@@ -1,3 +1,5 @@
+package heap;
+
 //this is the My solution of 6.5-9 of <<CLRS>>
 public class MergeSortedArraysByHeapSort {
     public static void main(String[] args) {

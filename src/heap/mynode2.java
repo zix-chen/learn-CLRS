@@ -1,3 +1,5 @@
+package heap;
+
 public class mynode2<T> {
     int key;
     T inf;

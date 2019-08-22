@@ -1,4 +1,4 @@
-package chapter7quicksort;
+package chapter7quicksortAndOtherSort;
 
 public class Node implements comparable<Node> {
     int key;

@@ -1,3 +1,5 @@
+package heap;
+
 //My solution for CLRS problem 6-2
 public class d_aryHeap {
     public static void main(String[] args) {

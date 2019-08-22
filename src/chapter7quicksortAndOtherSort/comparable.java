@@ -1,4 +1,4 @@
-package chapter7quicksort;
+package chapter7quicksortAndOtherSort;
 
 public interface comparable<T> {
     public int compareTo(T t);

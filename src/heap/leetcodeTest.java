@@ -1,3 +1,5 @@
+package heap;
+
 public class leetcodeTest {
     public static void main(String[] args) {
         String[][] board = {
