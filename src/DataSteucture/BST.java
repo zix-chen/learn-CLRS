@@ -37,12 +37,24 @@ public class BST<T> {
             nodes2[i] = bst2.new node((i-9)*22,(i-9)*22);
             bst2.TreeInsert(nodes2[i]);
         }
+        for (int i = 20; i < 40; i++) {
+            nodes2[i] = bst2.new node((i-17)*11,(i-17)*11);
+            bst2.TreeInsert(nodes2[i]);
+        }
         bst2.InOrder(bst2.root);
         System.out.println();
-        bst2.TreeDelete(nodes2[15]);
-        bst2.TreeDelete(nodes2[4]);
-        bst2.InOrder(bst2.root);
-        System.out.println(bst2.size);
+        for (int i = 7; i < 47; i++) {
+            bst2.TreeDelteteBalance(nodes2[i%40]);
+            if(i==21){
+                bst2.TreeDelteteBalance(node);
+            }
+            bst2.InOrderByPointer(bst2.root);
+            System.out.println();
+            System.out.println(bst2.size);
+        }
+        System.out.println();
+
+
     }
     int size;
     node root;
@@ -70,6 +82,7 @@ public class BST<T> {
         this.size = size;
     }
     public int[] InOrderByPointer(node root){
+        if(root==null)return null;
         node cur1 = root;
         node cur2 = cur1;
         int i =0;
@@ -105,6 +118,7 @@ public class BST<T> {
         InOrder(root.right);
     }
     public int[] InOrderByStack(node root){
+        if(root ==null)return null;
         Stack<node> stack = new Stack<>();
         node cur = root;
         int[] ans = new int[size];
@@ -217,7 +231,7 @@ public class BST<T> {
             z.right.left.p = z.right;
         }
         else {
-            node temp = TreeSeccessor(z.right);
+            node temp = TreeMinunm(z.right);
             Transplant(temp,temp.right);
             temp.right = z.right;
             temp.right.p = temp;
@@ -225,5 +239,40 @@ public class BST<T> {
             temp.left.p = temp;
             Transplant(z,temp);
         }
+    }
+    public void TreeDelteteBalance(node z){
+        if(size/2==0){
+            TreeDelete(z);
+        }
+        else{
+            size--;
+            if(z.left==null){
+                Transplant(z,z.right);
+            }
+            else if(z.right==null){
+                Transplant(z,z.left);
+            }
+            else {
+                node temp = TreeMaxium(z.left);
+                if(temp.p!=z){
+                    Transplant(temp,temp.left);
+                    temp.left = z.left;
+                    temp.left.p = temp;
+                }
+                temp.right =z.right;
+                temp.right.p = temp;
+                Transplant(z,temp);
+            }
+        }
+
+    }
+    public node TressSearch(int key){
+        node cur = root;
+        while(cur!=null){
+            if(cur.key==key) return cur;
+            else if(cur.key<key) cur = cur.right;
+            else cur = cur.left;
+        }
+        return null;
     }
 }
