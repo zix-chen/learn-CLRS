@@ -1,7 +1,7 @@
 package DataSteucture;
 
 import java.util.Stack;
-
+//also apply RedBlackTree function, to use it ,you should us insert and delete for RBtree
 public class BST<T> {
     public static void main(String[] args) {
         BST<Integer> bst = new BST<>(null,0);
@@ -26,20 +26,21 @@ public class BST<T> {
         BST<Integer> bst2 = new BST<>(null,0);
         BST<Integer>.node[] nodes2 = new BST.node[40];
         BST.node node = bst2.new node(99,99);
-        bst2.TreeInsertRecrusion(bst2.root,node);
+        bst2.RedBlackInsert(node);
         for (int i = 0; i < 10; i++) {
             nodes2[i] = bst2.new node(i*16,i*16);
             //bst2.TreeInsertRecrusion(bst2.root,nodes2[i]);
-            bst2.TreeInsert(nodes2[i]);
+            bst2.RedBlackInsert(nodes2[i]);
+            bst2.InOrder(bst2.root);
         }
         System.out.println();
         for (int i = 10; i < 20; i++) {
             nodes2[i] = bst2.new node((i-9)*22,(i-9)*22);
-            bst2.TreeInsert(nodes2[i]);
+            bst2.RedBlackInsert(nodes2[i]);
         }
         for (int i = 20; i < 40; i++) {
             nodes2[i] = bst2.new node((i-17)*11,(i-17)*11);
-            bst2.TreeInsert(nodes2[i]);
+            bst2.RedBlackInsert(nodes2[i]);
         }
         bst2.InOrder(bst2.root);
         System.out.println();
@@ -60,6 +61,7 @@ public class BST<T> {
     node root;
     node[] arr;
     public class node{
+        public boolean color;
         public int key;
         public T data;
         public node p;
@@ -74,6 +76,10 @@ public class BST<T> {
             this.p = p;
             this.left = left;
             this.right = right;
+        }
+        public node(int key,T data,boolean color){
+            this(key,data);
+            this.color = color;
         }
     }
 
@@ -114,6 +120,11 @@ public class BST<T> {
     public void InOrder(node root){
         if(root==null)return;
         InOrder(root.left);
+        if(root.p!=null&&root.p.color==true&&root.color==true){
+            System.out.println();
+            System.out.println(root+" "+root.key+"wrong!!!");
+            throw new NullPointerException(" sdd");
+        }
         System.out.print(root.data+" ");
         InOrder(root.right);
     }
@@ -274,5 +285,105 @@ public class BST<T> {
             else cur = cur.left;
         }
         return null;
+    }
+    //***********************************
+    //functions for RedBlackTree
+    public void RedBlackInsert(node node){
+        node y = root;
+        node x = root;
+        while(x!=null){
+            y = x;
+            if(node.key>x.key) x = x.right;
+            else x = x.left;
+        }
+        if(y==null) root = node;
+        else if(y.key>node.key) {
+            y.left = node;
+        }
+        else{
+            y.right = node;
+        }
+        node.p = y;
+        size++;
+        //TreeInsert(node);
+        node.color = true;
+        RBInsertFixup(node);
+    }
+    public void LeftRotate(node node){
+        node y = node.right;
+        node.right = y.left;
+        if(y.left!=null){
+            y.left.p = node;
+        }
+        y.p = node.p;
+        if(node==root) root = y;
+        else if(node == node.p.left){
+            node.p.left = y;
+        }
+        else {
+            node.p.right = y;
+        }
+        y.left = node;
+        node.p = y;
+    }
+    public void RightRotate(node node){
+        node y = node.left;
+        node.left = y.right;
+        if(y.right!=null){
+            y.right.p = node;
+        }
+        y.p = node.p;
+        if(node==root){
+            root=y;
+        }
+        else if(node == node.p.left){
+            node.p.left = y;
+        }
+        else{
+            node.p.right = y;
+        }
+        node.p = y;
+        y.right = node;
+    }
+    public void RBInsertFixup(node node){
+        while(node!=root&&node.p.color==true){
+            if(node.p==node.p.p.left){
+                node y = node.p.p.right;
+                if(y!=null&&y.color==true){
+                    node.p.color = false;
+                    y.color = false;
+                    node.p.p.color = true;
+                    node = node.p.p;
+                }
+                else{
+                    if(node == node.p.right){
+                        node = node.p;
+                        LeftRotate(node);
+                    }
+                    node.p.color = false;
+                    node.p.p.color = true;
+                    RightRotate(node.p.p);
+                }
+            }
+            else{
+                node y = node.p.p.left;
+                if(y!=null&&y.color==true){
+                    node.p.color = false;
+                    y.color = false;
+                    node.p.p.color = true;
+                    node = node.p.p;
+                }
+                else{
+                    if(node == node.p.left){
+                        node = node.p;
+                        RightRotate(node);
+                    }
+                    node.p.color = false;
+                    node.p.p.color = true;
+                    LeftRotate(node.p.p);
+                }
+            }
+        }
+        root.color = false;
     }
 }
