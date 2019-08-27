@@ -61,6 +61,8 @@ public class BST<T> {
     node root;
     node[] arr;
     public class node{
+        public int size;
+        public int height;
         public boolean color;
         public int key;
         public T data;
@@ -71,6 +73,14 @@ public class BST<T> {
             this.key = key;
             this.data = data;
         }
+        public node(node p,node left, node right,int height, T data){
+            this.data = data;
+            this.p = p;
+            this.left = left;
+            this.right = right;
+            this.height = height;
+        }
+
         public node(node p,node left, node right, T data){
             this.data = data;
             this.p = p;
@@ -82,7 +92,10 @@ public class BST<T> {
             this.color = color;
         }
     }
-
+    public BST(){
+        root = null;
+        size = 0;
+    }
     public BST(node root,int size){
         this.root = root;
         this.size = size;
@@ -385,5 +398,90 @@ public class BST<T> {
             }
         }
         root.color = false;
+    }
+    //**************************************
+    /*
+    *persistent dynamic sets 持久动态集的插入功能
+    *未测试过，didn't check so may have bugs;
+    * there is a mistake I should not add the parent ,because those nodes that didnot changed ,
+    * their parent also didnot change so the parent is not right;
+     */
+    public node Copy(node node){
+        if(node==null) return null;
+        node temp = new node(node.p,node.left,node.right,node.data);
+        return temp;
+    }
+    public node Copy(node node,node p){
+        node temp = Copy(node);
+        temp.p = p;
+        return temp;
+    }
+    public BST PersisitentTreeInsert(BST<T> bst, int key){
+        BST<T> ans= new BST<>();
+        ans.size = bst.size+1;
+        ans.root = Copy(bst.root);
+        node cur = ans.root;
+        node last = ans.root;
+        while(cur!=null){
+            last = cur;
+            if(cur.key>key){
+                cur.left = Copy(cur.left,cur);
+                cur = cur.left;
+            }
+            else{
+                cur.right = Copy(cur.right,cur);
+                cur = cur.right;
+            }
+        }
+        node temp = new node(key,null);
+        if(last==null){
+            ans.root = temp;
+        }
+        else if(last.key>key){
+            last.left = temp;
+        }
+        else{
+            last.right = temp;
+        }
+        return ans;
+    }
+    //*******************************
+    /*
+    *实现AVL tree 的 插入操作
+    * 利用了height，不使用height 则是普通BST
+    * 暂时先不写了~~~~~~
+     */
+    public void AVLInsert(node troot,node node){
+        node y = troot;
+        node x = troot;
+        while(x!=null){
+            y = x;
+            if(x.key>node.key){
+                x = x.left;
+            }
+            else{
+                x = x.right;
+            }
+        }
+        node.p = y;
+        if(y==null){
+            root = node;
+        }
+        else if(y.key>node.key){
+            y.left = node;
+            if(y.right==null){
+                y.height = 1;
+            }
+        }
+        else{
+            y.right = node;
+            if(y.left==null){
+                y.height = 1;
+            }
+        }
+        node.height = 0;
+        while(y!=troot){
+            y.height = Math.max(y.left.height,y.right.height);
+        }
     }
 }
